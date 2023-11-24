@@ -1,0 +1,75 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mensaje {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f2f2f2;
+            max-width: 70%;
+        }
+
+        .mensaje-propio {
+            align-self: flex-end;
+            background-color: #DCF8C6;
+        }
+
+        .mensaje-propio .contenido {
+            text-align: right;
+        }
+
+        #mensaje {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 80px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        .mensaje-otro {
+            align-self: flex-start;
+            background-color: #ccebff;
+            color: #007bff; /* Color de texto azul */
+        }
+        
+        /* Mejora de diseño para dispositivos móviles */
+        @media screen and (max-width: 600px) {
+            #chat-container {
+                max-width: 100%; /* Utiliza todo el ancho disponible */
+                padding: 10px; /* Agrega espaciado */
+            }
+            .mensaje {
+                max-width: 90%; /* Ajusta el ancho de los mensajes */
+            }
+            #mensaje {
+                width: calc(100% - 90px); /* Ajusta el campo de entrada */
+            }
+        }
+        .hora {
+            font-size: 0.8em; /* Tamaño de fuente más pequeño */
+            color: gray; /* Color de la hora */
+            margin-left: 5px; /* Espacio a la izquierda para separar el mensaje de la hora */
+        }

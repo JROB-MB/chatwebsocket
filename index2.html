@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Client</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilo CSS adicional */
+       
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="mensajes-enviados">
+            <h2>Mensajes Enviados</h2>
+            <ul id="lista-mensajes"></ul>
+        </div>
+        <div id="mensajes"></div>
+       
+        <div style="display: flex;">
+            <input type="text" id="mensaje" placeholder="Escribe un mensaje">
+            <button onclick="enviarMensaje()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://192.168.100.10:9090');
+        let resourceId = "ResourceId";
+        const listaMensajes = document.getElementById('lista-mensajes');
+
+        ws.onopen = function(event) {
+            console.log('Conectado al servidor WebSocket');
+        };
+
+        ws.onmessage = function(event) {
+            console.log('Mensaje recibido:', event.data);
+            const mensajes = document.getElementById('mensajes');
+            const data = JSON.parse(event.data);
+            
+            // Crear un elemento div para el mensaje
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('mensaje');
+
+            // Función para obtener la hora actual en formato HH:MM
+            function getCurrentTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+
+            // Establecer la clase de estilo según el remitente
+            if (data.resourceId === resourceId) {
+                messageDiv.classList.add('mensaje-propio');
+                const listItem = document.createElement('li');
+                listItem.textContent = `${data.message}`;
+                listItem.style.color = 'green';
+                const horaSpan = document.createElement('span');
+                horaSpan.classList.add('hora');
+                horaSpan.textContent = getCurrentTime();
+                listItem.appendChild(horaSpan);
+                listaMensajes.appendChild(listItem);
+            } else {
+                messageDiv.classList.add('mensaje-otro');
+                const messageContent = document.createElement('span');
+                messageContent.textContent = `[${data.resourceId}]: ${data.message}`;
+                const horaSpan = document.createElement('span');
+                horaSpan.classList.add('hora');
+                horaSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(messageContent);
+                messageDiv.appendChild(horaSpan);
+                mensajes.appendChild(messageDiv);
+            }
+        };
+
+        function enviarMensaje() {
+            const mensajeInput = document.getElementById('mensaje');
+            const mensaje = mensajeInput.value;
+        
+            const messageObject = {
+                resourceId: resourceId,
+                message: mensaje
+            };
+        
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('mensaje', 'mensaje-propio');
+            const messageContent = document.createElement('span');
+            messageContent.textContent = `[${resourceId}]: ${mensaje}`;
+            const horaSpan = document.createElement('span');
+            horaSpan.classList.add('hora');
+            horaSpan.textContent = getCurrentTime();
+            messageDiv.appendChild(messageContent);
+            messageDiv.appendChild(horaSpan);
+        
+            const mensajes = document.getElementById('mensajes');
+            mensajes.appendChild(messageDiv);
+        
+            ws.send(JSON.stringify(messageObject));
+        
+            mensajeInput.value = '';
+        }
+    </script>
+</body>
+</html>
